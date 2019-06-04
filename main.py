@@ -14,7 +14,7 @@ reflectance = SPEC_DATA['Reflectance']
 
 df = pd.read_csv(url
                  , names=['sepal length', 'sepal width', 'petal length', 'petal width', 'target'])
-print(df.head())
+df.head()
 features = ['sepal length', 'sepal width', 'petal length', 'petal width']
 x = df.loc[:, features].values
 y = df.loc[:, ['target']].values
