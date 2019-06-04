@@ -7,6 +7,11 @@ from sklearn.preprocessing import StandardScaler
 # %matplotlib inline
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 # loading dataset into Pandas DataFrame
+
+SPEC_DATA = pd.read_fwf("C:/Users/danie/Downloads/clean_glass.txt", skiprows=17, names=['Wave_Length', 'Reflectance'])
+wave_length = SPEC_DATA['Wave_Length']
+reflectance = SPEC_DATA['Reflectance']
+
 df = pd.read_csv(url
                  , names=['sepal length', 'sepal width', 'petal length', 'petal width', 'target'])
 print(df.head())
@@ -14,7 +19,7 @@ features = ['sepal length', 'sepal width', 'petal length', 'petal width']
 x = df.loc[:, features].values
 y = df.loc[:, ['target']].values
 x = StandardScaler().fit_transform(x)
-print(pd.DataFrame(data=x, columns=features).head())
+pd.DataFrame(data=x, columns=features).head()
 # PCA Projection to 2D
 pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(x)
