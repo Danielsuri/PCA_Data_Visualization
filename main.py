@@ -7,10 +7,9 @@ from sklearn.preprocessing import StandardScaler
 # %matplotlib inline
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 # loading dataset into Pandas DataFrame
-
-SPEC_DATA = pd.read_fwf("C:/Users/danie/Downloads/clean_glass.txt", skiprows=17, names=['Wave_Length', 'Reflectance'])
-wave_length = SPEC_DATA['Wave_Length']
-reflectance = SPEC_DATA['Reflectance']
+data = pd.read_csv('PCA/Air_NQ51A06081_19-59-53-923.txt', sep='\t', skiprows=13, names=['Wave_Length', 'Reflectance'])
+wave_length = data['Wave_Length']
+reflectance = data['Reflectance']
 
 df = pd.read_csv(url
                  , names=['sepal length', 'sepal width', 'petal length', 'petal width', 'target'])
