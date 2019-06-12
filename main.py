@@ -5,8 +5,6 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import glob
 
-# %matplotlib inline
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
 # loading dataset into Pandas DataFrame
 
 all_files = glob.glob('PCA/*.txt')
@@ -20,12 +18,11 @@ all_pca_data.insert(loc=0, column='Wave_Length', value=data_frame['Wave_Length']
 all_pca_data_T = all_pca_data.T
 
 features = list(all_pca_data_T.index.values)
-del features[0]
-for idx, items in enumerate(features):
-    features[idx] = items.split('_')[0]
+# del features[0]
+for idx, items in enumerate(features[1::]):
+    features[idx+1] = items.split('_')[0]
+all_pca_data_T.rename(index=features)
 
-data_idxes = list(all_pca_data_T.index.values)
-del data_idxes[0]
 x = all_pca_data_T.loc[:, data_idxes].values
 
 headers = list(all_pca_data.columns)
