@@ -40,7 +40,7 @@ principalDf = pd.DataFrame(data=principalComponents
 
 finalDf = pd.concat([principalDf, featDf], axis=1)
 finalDf.rename(columns={0: 'target'}, inplace=True)
-
+del (idx, items, all_files)
 
 fig = plt.figure(figsize=(8, 8))
 ax = fig.add_subplot(1, 1, 1)
@@ -57,4 +57,4 @@ for target, color in zip(targets, colors):
                , s=50)
 ax.legend(targets)
 ax.grid()
-del (idx, items, all_files)
+
