@@ -57,4 +57,5 @@ for target, color in zip(targets, colors):
                , s=50)
 ax.legend(targets)
 ax.grid()
+plt.show()
 
