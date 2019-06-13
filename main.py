@@ -16,6 +16,8 @@ for filename in all_files:
     all_pca_data[filename[4::]] = data_frame[filename[4::]]
 all_pca_data.insert(loc=0, column='Wave_Length', value=data_frame['Wave_Length'])
 all_pca_data_T = all_pca_data.T
+# set first row as columns names:
+all_pca_data_T.columns = all_pca_data_T.iloc[0]
 
 features = list(all_pca_data_T.index.values)
 # del features[0]
