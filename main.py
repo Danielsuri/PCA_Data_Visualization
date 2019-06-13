@@ -42,6 +42,9 @@ finalDf = pd.concat([principalDf, featDf], axis=1)
 finalDf.rename(columns={0: 'target'}, inplace=True)
 del (idx, items, all_files)
 
+explained_variance = pca.explained_variance_ratio_
+
+
 fig = plt.figure(figsize=(8, 8))
 ax = fig.add_subplot(1, 1, 1)
 ax.set_xlabel('Principal Component 1', fontsize=15)
