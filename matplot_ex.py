@@ -1,23 +1,27 @@
-import numpy as np
 import matplotlib.pyplot as plt
 
+fig = plt.figure()
+ax=fig.add_subplot(111)
+plt.plot([0,5],[0,6], alpha=0)
+plt.xlim([-1,6])
+plt.ylim([-1,6])
 
-N = 5
-menMeans = (20, 35, 30, 35, 27)
-womenMeans = (25, 32, 34, 20, 25)
-menStd = (2, 3, 4, 1, 2)
-womenStd = (3, 5, 2, 3, 3)
-ind = np.arange(N)    # the x locations for the groups
-width = 0.35       # the width of the bars: can also be len(x) sequence
+for i in range(6):
+    for j in range(6):
+        an = plt.annotate("Kill me",xy=(j,i), picker=5)
 
-p1 = plt.bar(ind, menMeans, width, yerr=menStd)
-p2 = plt.bar(ind, womenMeans, width,
-             bottom=menMeans, yerr=womenStd)
 
-plt.ylabel('Scores')
-plt.title('Scores by group and gender')
-plt.xticks(ind, ('G1', 'G2', 'G3', 'G4', 'G5'))
-plt.yticks(np.arange(0, 81, 10))
-plt.legend((p1[0], p2[0]), ('Men', 'Women'))
+def onclick(event):
+    event.artist.set_text("I'm killed")
+    event.artist.set_color("g")
+    event.artist.set_rotation(20)
+    # really kill the text (but too boring for this example;-) )
+    #event.artist.set_visible(False)
+    # or really REALLY kill it with:
+    #event.artist.remove()
+    fig.canvas.draw()
+
+
+cid = fig.canvas.mpl_connect('pick_event', onclick)
 
 plt.show()

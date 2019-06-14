@@ -46,6 +46,7 @@ del (idx, items, all_files, all_pca_data)
 explained_variance = pca.explained_variance_ratio_
 
 # plot:
+
 targets = list(set(list(finalDf['target'])))
 targets.sort()
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -53,10 +54,15 @@ for items in targets:
     x = finalDf.loc[finalDf['target'] == items, 'PC1']
     y = finalDf.loc[finalDf['target'] == items, 'PC2']
     ax.scatter(x, y, label=items)
+    # uncomment for annotate:
+    # for dot in enumerate(x):
+    #     plt.annotate(items, xy=(x.values[dot[0]], y.values[dot[0]]), xytext=(10, 10),
+    #                  textcoords="offset points", arrowprops=dict(arrowstyle="->"))
+
 ax.legend()
 ax.set_xlabel('PC1', fontsize=15)
 ax.set_ylabel('PC2', fontsize=15)
 ax.set_title('2 Component PCA', fontsize=20)
 ax.grid()
-plt.show()
 
+plt.show()
