@@ -36,29 +36,27 @@ df = pd.DataFrame(data=x, index=features[1::])
 pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(x)
 principalDf = pd.DataFrame(data=principalComponents
-                           , columns=['principal component 1', 'principal component 2'])
+                           , columns=['PC1', 'PC2'])
 
 finalDf = pd.concat([principalDf, featDf], axis=1)
 finalDf.rename(columns={0: 'target'}, inplace=True)
-del (idx, items, all_files)
+# delete unused vars
+del (idx, items, all_files, all_pca_data)
 
 explained_variance = pca.explained_variance_ratio_
 
-
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(1, 1, 1)
-ax.set_xlabel('Principal Component 1', fontsize=15)
-ax.set_ylabel('Principal Component 2', fontsize=15)
+# plot:
+targets = list(set(list(finalDf['target'])))
+targets.sort()
+fig, ax = plt.subplots(figsize=(6, 5))
+for items in targets:
+    x = finalDf.loc[finalDf['target'] == items, 'PC1']
+    y = finalDf.loc[finalDf['target'] == items, 'PC2']
+    ax.scatter(x, y, label=items)
+ax.legend()
+ax.set_xlabel('PC1', fontsize=15)
+ax.set_ylabel('PC2', fontsize=15)
 ax.set_title('2 Component PCA', fontsize=20)
-targets = ['Air', 'Egg', 'Yogurt']
-colors = ['r', 'g', 'b']
-for target, color in zip(targets, colors):
-    indicesToKeep = finalDf['target'] == target
-    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-               , finalDf.loc[indicesToKeep, 'principal component 2']
-               , c=color
-               , s=50)
-ax.legend(targets)
 ax.grid()
 plt.show()
 
