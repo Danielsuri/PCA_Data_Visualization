@@ -59,7 +59,7 @@ def pick_custom_hit():
         ydata = line.get_ydata()
         maxd = 0.05
         d = np.sqrt(
-            (xdata - mouseevent.xdata)**2 + (ydata - mouseevent.ydata)**2)
+            (xdata - mouseevent.xdata) ** 2 + (ydata - mouseevent.ydata) ** 2)
 
         ind, = np.nonzero(d <= maxd)
         if len(ind):
@@ -89,8 +89,8 @@ def pick_scatter_plot():
         print('onpick3 scatter:', ind, x[ind], y[ind])
 
     fig, ax = plt.subplots()
-    col = ax.scatter(x, y, 100*s, c, picker=True)
-    #fig.savefig('pscoll.eps')
+    col = ax.scatter(x, y, 100 * s, c, picker=True)
+    # fig.savefig('pscoll.eps')
     fig.canvas.mpl_connect('pick_event', onpick3)
 
 

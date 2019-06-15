@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import glob
+from numpy.random import rand
+from matplotlib.lines import Line2D
+from matplotlib.patches import Rectangle
+from matplotlib.text import Text
+from matplotlib.image import AxesImage
 
 # loading dataset into Pandas DataFrame
 
@@ -45,25 +50,54 @@ del (idx, items, all_files, all_pca_data)
 
 explained_variance = pca.explained_variance_ratio_
 
+
 # plot:
+
+
+def line_picker(line, mouseevent):
+    """
+    find the points within a certain distance from the mouseclick in
+    data coords and attach some extra attributes, pickx and picky
+    which are the data points that were picked
+    """
+    if mouseevent.xdata is None:
+        return False, dict()
+    xdata = line.get_xdata()
+    ydata = line.get_ydata()
+    lbl = line.get_label()
+    maxd = 0.25
+    d = np.sqrt(
+        (xdata - mouseevent.xdata) ** 2 + (ydata - mouseevent.ydata) ** 2)
+
+    ind, = np.nonzero(d <= maxd)
+    if len(ind):
+        pickx = xdata[ind]
+        picky = ydata[ind]
+        picklbl = lbl
+        props = dict(ind=ind, pickx=pickx, picky=picky, picklbl=picklbl)
+        return True, props
+    else:
+        return False, dict()
+
+
+def onpick2(event):
+    print('onpick2 line:', event.pickx, event.picky, event.picklbl)
+
 
 targets = list(set(list(finalDf['target'])))
 targets.sort()
 fig, ax = plt.subplots(figsize=(6, 5))
 for items in targets:
-    x = finalDf.loc[finalDf['target'] == items, 'PC1']
-    y = finalDf.loc[finalDf['target'] == items, 'PC2']
-    ax.scatter(x, y, label=items)
-    # uncomment for annotate:
-    # for dot in enumerate(x):
-    #     plt.annotate(items, xy=(x.values[dot[0]], y.values[dot[0]]), xytext=(10, 10),
-    #                  textcoords="offset points", arrowprops=dict(arrowstyle="->"))
+    x = finalDf.loc[finalDf['target'] == items, 'PC1'].values
+    y = finalDf.loc[finalDf['target'] == items, 'PC2'].values
+    line, = ax.plot(x, y, 'o', picker=line_picker, label=items)
 
+fig.canvas.mpl_connect('pick_event', onpick2)
 ax.legend()
 ax.set_xlabel('PC1', fontsize=15)
 ax.set_ylabel('PC2', fontsize=15)
 ax.set_title('2 Component PCA', fontsize=20)
 ax.grid()
 
-
-plt.show()
+if __name__ == '__main__':
+    plt.show()
