@@ -25,14 +25,12 @@ all_pca_data_T = all_pca_data.T
 all_pca_data_T.columns = all_pca_data_T.iloc[0]
 
 features = list(all_pca_data_T.index.values)
-# del features[0]
 for idx, items in enumerate(features[1::]):
     features[idx + 1] = items.split('_')[0]
 featDf = pd.DataFrame([features])
 featDf.drop(columns=0, inplace=True)
 featDf = featDf.T
-featDf.reset_index(inplace=True)
-featDf.drop(columns='index', inplace=True)
+featDf.reset_index(inplace=True, drop=True)
 x = all_pca_data_T.iloc[1:].values
 y = all_pca_data_T.iloc[1:].index.values
 x = StandardScaler().fit_transform(x)
