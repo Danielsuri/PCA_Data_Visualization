@@ -94,7 +94,7 @@ fig.canvas.mpl_connect('pick_event', onpick2)
 ax.legend()
 ax.set_xlabel('PC1', fontsize=15)
 ax.set_ylabel('PC2', fontsize=15)
-ax.set_title('2 Component PCA', fontsize=20)
+ax.set_title('2 Component PCA 18.02 Samples', fontsize=20)
 ax.grid()
 
 if __name__ == '__main__':
