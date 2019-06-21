@@ -47,6 +47,8 @@ finalDf.rename(columns={0: 'target'}, inplace=True)
 del (idx, items, all_files, all_pca_data)
 
 explained_variance = pca.explained_variance_ratio_
+loadingsDf = pd.DataFrame(data=pca.components_.T * np.sqrt(pca.explained_variance_),
+                          columns=['PC1 Loadings', 'PC2 Loadings'])
 
 
 # plot:
@@ -84,18 +86,27 @@ def onpick2(event):
 
 targets = list(set(list(finalDf['target'])))
 targets.sort()
-fig, ax = plt.subplots(figsize=(6, 5))
+fig, ax = plt.subplots(1, 2)
+font_size = 10
 for items in targets:
     x = finalDf.loc[finalDf['target'] == items, 'PC1'].values
     y = finalDf.loc[finalDf['target'] == items, 'PC2'].values
-    line, = ax.plot(x, y, 'o', picker=line_picker, label=items)
+    line, = ax[0].plot(x, y, 'o', picker=line_picker, label=items)
 
 fig.canvas.mpl_connect('pick_event', onpick2)
-ax.legend()
-ax.set_xlabel('PC1', fontsize=15)
-ax.set_ylabel('PC2', fontsize=15)
-ax.set_title('2 Component PCA 18.02 Samples', fontsize=20)
-ax.grid()
+ax[0].legend()
+ax[0].set_xlabel('PC1', fontsize=font_size)
+ax[0].set_ylabel('PC2', fontsize=font_size)
+ax[0].set_title('2 Component PCA 18.02 Samples', fontsize=20)
+ax[0].grid()
+
+ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
+ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC2 Loadings'].values, label=loadingsDf.columns.values[1])
+ax[1].set_xlabel('Wave Length', fontsize=font_size)
+ax[1].set_ylabel('Loadings', fontsize=font_size)
+ax[1].set_title('Loadings')
+ax[1].legend()
+ax[1].grid()
 
 if __name__ == '__main__':
     plt.show()
