@@ -97,7 +97,7 @@ fig.canvas.mpl_connect('pick_event', onpick2)
 ax[0].legend()
 ax[0].set_xlabel('PC1', fontsize=font_size)
 ax[0].set_ylabel('PC2', fontsize=font_size)
-ax[0].set_title('2 Component PCA 18.02 Samples')
+ax[0].set_title('2 Component PCA')
 ax[0].grid()
 
 ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
