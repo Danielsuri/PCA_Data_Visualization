@@ -86,7 +86,7 @@ def onpick2(event):
 
 targets = list(set(list(finalDf['target'])))
 targets.sort()
-fig, ax = plt.subplots(1, 2)
+fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 font_size = 10
 for items in targets:
     x = finalDf.loc[finalDf['target'] == items, 'PC1'].values
@@ -97,7 +97,7 @@ fig.canvas.mpl_connect('pick_event', onpick2)
 ax[0].legend()
 ax[0].set_xlabel('PC1', fontsize=font_size)
 ax[0].set_ylabel('PC2', fontsize=font_size)
-ax[0].set_title('2 Component PCA 18.02 Samples', fontsize=20)
+ax[0].set_title('2 Component PCA 18.02 Samples')
 ax[0].grid()
 
 ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
@@ -107,6 +107,7 @@ ax[1].set_ylabel('Loadings', fontsize=font_size)
 ax[1].set_title('Loadings')
 ax[1].legend()
 ax[1].grid()
+plt.subplots_adjust(wspace=0.3)
 
 if __name__ == '__main__':
     plt.show()
