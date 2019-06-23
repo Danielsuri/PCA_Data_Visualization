@@ -7,7 +7,6 @@ all_files = glob.glob('data_yogurt_air_egg/*.txt')
 all_files.sort()
 
 df = pd.DataFrame()
-flag = 1
 for file_name in all_files:
     col_name = file_name.split("\\")[1].split('.')[0]
     data = pd.read_csv(file_name, sep='\t', skiprows=13, names=['Wave_Length', col_name])
