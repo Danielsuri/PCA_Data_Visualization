@@ -14,37 +14,31 @@ from matplotlib.image import AxesImage
 
 all_files = glob.glob('PCA/*.txt')
 all_files.sort()
-all_pca_data = pd.DataFrame()
+df2 = pd.DataFrame()
 
 for filename in all_files:
-    data_frame = pd.read_csv(filename, sep='\t', skiprows=13, names=['Wave_Length', filename[4::]])
-    all_pca_data[filename[4::]] = data_frame[filename[4::]]
-all_pca_data.insert(loc=0, column='Wave_Length', value=data_frame['Wave_Length'])
-all_pca_data_T = all_pca_data.T
-# set first row as columns names:
-all_pca_data_T.columns = all_pca_data_T.iloc[0]
+    col_name = filename.split("\\")[1].split('.')[0]
+    data = pd.read_csv(filename, sep='\t', skiprows=13, names=['Wave_Length', col_name])
+    try:  # insert Wave Length only once:
+        df2.insert(loc=0, column='Wave_Length', value=data['Wave_Length'].values, allow_duplicates=False)
+        pass
+    except ValueError:
+        pass
+    df2.insert(loc=1, column=col_name, value=data[col_name].values)
 
-features = list(all_pca_data_T.index.values)
-for idx, items in enumerate(features[1::]):
-    features[idx + 1] = items.split('_')[0]
-featDf = pd.DataFrame([features])
-featDf.drop(columns=0, inplace=True)
-featDf = featDf.T
-featDf.reset_index(inplace=True, drop=True)
-x = all_pca_data_T.iloc[1:].values
-y = all_pca_data_T.iloc[1:].index.values
-x = StandardScaler().fit_transform(x)
-df = pd.DataFrame(data=x, index=features[1::])
+df2 = df2.T
+for names in df2.index.values:
+    df2.rename(index={names: names.split('_')[0]}, inplace=True)
+
+x = StandardScaler().fit_transform(df2.iloc[1:].values)
+y = df2.iloc[1:].index.values
 
 pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(x)
 principalDf = pd.DataFrame(data=principalComponents
                            , columns=['PC1', 'PC2'])
 
-finalDf = pd.concat([principalDf, featDf], axis=1)
-finalDf.rename(columns={0: 'target'}, inplace=True)
-# delete unused vars
-del (idx, items, all_files, all_pca_data)
+principalDf.insert(loc=0, column='targets', value=y)
 
 explained_variance = pca.explained_variance_ratio_
 loadingsDf = pd.DataFrame(data=pca.components_.T * np.sqrt(pca.explained_variance_),
@@ -52,8 +46,6 @@ loadingsDf = pd.DataFrame(data=pca.components_.T * np.sqrt(pca.explained_varianc
 
 
 # plot:
-
-
 def line_picker(line, mouseevent):
     """
     find the points within a certain distance from the mouseclick in
@@ -84,13 +76,13 @@ def onpick2(event):
     print('onpick2 line:', event.pickx, event.picky, event.picklbl)
 
 
-targets = list(set(list(finalDf['target'])))
+targets = list(set(list(principalDf['targets'])))
 targets.sort()
 fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 font_size = 10
 for items in targets:
-    x = finalDf.loc[finalDf['target'] == items, 'PC1'].values
-    y = finalDf.loc[finalDf['target'] == items, 'PC2'].values
+    x = principalDf.loc[principalDf['targets'] == items, 'PC1'].values
+    y = principalDf.loc[principalDf['targets'] == items, 'PC2'].values
     line, = ax[0].plot(x, y, 'o', picker=line_picker, label=items)
 
 fig.canvas.mpl_connect('pick_event', onpick2)
@@ -100,8 +92,8 @@ ax[0].set_ylabel('PC2', fontsize=font_size)
 ax[0].set_title('2 Component PCA')
 ax[0].grid()
 
-ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
-ax[1].plot(data_frame['Wave_Length'].values, loadingsDf['PC2 Loadings'].values, label=loadingsDf.columns.values[1])
+ax[1].plot(df2.iloc[0].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
+ax[1].plot(df2.iloc[0].values, loadingsDf['PC2 Loadings'].values, label=loadingsDf.columns.values[1])
 ax[1].set_xlabel('Wave Length', fontsize=font_size)
 ax[1].set_ylabel('Loadings', fontsize=font_size)
 ax[1].set_title('Loadings')
