@@ -87,8 +87,8 @@ for items in targets:
 
 fig.canvas.mpl_connect('pick_event', onpick2)
 ax[0].legend()
-ax[0].set_xlabel('PC1', fontsize=font_size)
-ax[0].set_ylabel('PC2', fontsize=font_size)
+ax[0].set_xlabel('PC1   '+'{0:.0%}'.format(explained_variance[0]), fontsize=font_size)
+ax[0].set_ylabel('PC2   '+'{0:.0%}'.format(explained_variance[1]), fontsize=font_size)
 ax[0].set_title('2 Component PCA')
 ax[0].grid()
 
