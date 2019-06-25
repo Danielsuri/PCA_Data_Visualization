@@ -114,6 +114,8 @@ for idx, txt in enumerate(explained_variance[:4] * 100):
 ax[1][0].grid()
 ax[1][0].set_title('Contribution of Loadings')
 ax[1][0].set_xlabel('PC#')
+
+ax[1][1].axis('off')
 plt.subplots_adjust(wspace=0.3, hspace=0.5)
 
 if __name__ == '__main__':
