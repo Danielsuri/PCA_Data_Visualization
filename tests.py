@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob
 
-all_files = glob.glob('data_yogurt_air_egg/*.txt')
+all_files = glob.glob('plot/*.txt')
 all_files.sort()
 
 df = pd.DataFrame()
@@ -18,7 +18,7 @@ for file_name in all_files:
     df.insert(loc=1, column=col_name, value=data[col_name].values)
 
 samples_to_plot = []
-str_to_find = 'Air'
+str_to_find = 'Egg'
 sample_names = df.columns.values
 for sample in sample_names:
     if str_to_find in sample:

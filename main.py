@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import glob
+from matplotlib.font_manager import FontProperties
 from numpy.random import rand
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.text import Text
 from matplotlib.image import AxesImage
 
-# loading dataset into Pandas DataFrame
-
-all_files = glob.glob('PCA/*.txt')
+all_files = glob.glob('plot/*.txt')
 all_files.sort()
 df2 = pd.DataFrame()
 
@@ -30,19 +29,26 @@ df2 = df2.T
 for names in df2.index.values:
     df2.rename(index={names: names.split('_')[0]}, inplace=True)
 
+# x = df2.iloc[1:].values
 x = StandardScaler().fit_transform(df2.iloc[1:].values)
 y = df2.iloc[1:].index.values
 
-pca = PCA(n_components=2)
+pca = PCA()
 principalComponents = pca.fit_transform(x)
-principalDf = pd.DataFrame(data=principalComponents
-                           , columns=['PC1', 'PC2'])
+explained_variance = pca.explained_variance_ratio_
+pca_col_names = []
+for idx, items in enumerate(explained_variance):
+    pca_col_names.append('PC' + str((idx + 1)))
+
+all_principalDf = pd.DataFrame(data=principalComponents
+                               , columns=pca_col_names)
+
+principalDf = all_principalDf[['PC1', 'PC2']]
 
 principalDf.insert(loc=0, column='targets', value=y)
 
-explained_variance = pca.explained_variance_ratio_
 loadingsDf = pd.DataFrame(data=pca.components_.T * np.sqrt(pca.explained_variance_),
-                          columns=['PC1 Loadings', 'PC2 Loadings'])
+                          columns=pca_col_names)
 
 
 # plot:
@@ -78,28 +84,37 @@ def onpick2(event):
 
 targets = list(set(list(principalDf['targets'])))
 targets.sort()
-fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-font_size = 10
+fig, ax = plt.subplots(2, 2, figsize=(10, 5))
 for items in targets:
     x = principalDf.loc[principalDf['targets'] == items, 'PC1'].values
     y = principalDf.loc[principalDf['targets'] == items, 'PC2'].values
-    line, = ax[0].plot(x, y, 'o', picker=line_picker, label=items)
+    line, = ax[0][0].plot(x, y, 'o', picker=line_picker, label=items)
 
 fig.canvas.mpl_connect('pick_event', onpick2)
-ax[0].legend()
-ax[0].set_xlabel('PC1   '+'{0:.0%}'.format(explained_variance[0]), fontsize=font_size)
-ax[0].set_ylabel('PC2   '+'{0:.0%}'.format(explained_variance[1]), fontsize=font_size)
-ax[0].set_title('2 Component PCA')
-ax[0].grid()
+fontP = FontProperties()
+fontP.set_size('small')
+ax[0][0].legend(prop=fontP)
+ax[0][0].set_xlabel('PC1   ' + '{0:.0%}'.format(explained_variance[0]))
+ax[0][0].set_ylabel('PC2   ' + '{0:.0%}'.format(explained_variance[1]))
+ax[0][0].set_title('2 Component PCA')
+ax[0][0].grid()
 
-ax[1].plot(df2.iloc[0].values, loadingsDf['PC1 Loadings'].values, label=loadingsDf.columns.values[0])
-ax[1].plot(df2.iloc[0].values, loadingsDf['PC2 Loadings'].values, label=loadingsDf.columns.values[1])
-ax[1].set_xlabel('Wave Length', fontsize=font_size)
-ax[1].set_ylabel('Loadings', fontsize=font_size)
-ax[1].set_title('Loadings')
-ax[1].legend()
-ax[1].grid()
-plt.subplots_adjust(wspace=0.3)
+for idx, items in enumerate(loadingsDf.columns.values[:4]):
+    ax[0][1].plot(df2.iloc[0].values, loadingsDf[items].values, label=items + ' {:.4%}'.format(explained_variance[idx]))
+ax[0][1].set_xlabel('Wave Length')
+ax[0][1].set_ylabel('Loadings')
+ax[0][1].set_title('Loadings')
+ax[0][1].legend(prop=fontP)
+ax[0][1].grid()
+
+ax[1][0].plot(np.arange(1, len(explained_variance[:4]) + 1), explained_variance[:4] * 100, marker='o')
+for idx, txt in enumerate(explained_variance[:4] * 100):
+    ax[1][0].text(np.arange(1, len(explained_variance[:4]) + 1)[idx], (explained_variance[:4] * 100)[idx],
+                  '{:.4f}'.format(txt))
+ax[1][0].grid()
+ax[1][0].set_title('Contribution of Loadings')
+ax[1][0].set_xlabel('PC#')
+plt.subplots_adjust(wspace=0.3, hspace=0.5)
 
 if __name__ == '__main__':
     plt.show()
