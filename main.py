@@ -35,6 +35,7 @@ y = df2.iloc[1:].index.values
 
 pca = PCA()
 principalComponents = pca.fit_transform(x)
+test = pca.fit(x).components_
 explained_variance = pca.explained_variance_ratio_
 pca_col_names = []
 for idx, items in enumerate(explained_variance):
@@ -99,8 +100,10 @@ ax[0][0].set_ylabel('PC2   ' + '{0:.0%}'.format(explained_variance[1]))
 ax[0][0].set_title('2 Component PCA')
 ax[0][0].grid()
 
+# Loadings plot
 for idx, items in enumerate(loadingsDf.columns.values[:4]):
-    ax[0][1].plot(df2.iloc[0].values, loadingsDf[items].values, label=items + ' {:.4%}'.format(explained_variance[idx]))
+    # ax[0][1].plot(df2.iloc[0].values, loadingsDf[items].values, label=items + ' {:.4%}'.format(explained_variance[idx]))
+    ax[0][1].plot(df2.iloc[0].values, test[idx], label=items + ' {:.4%}'.format(explained_variance[idx]))
 ax[0][1].set_xlabel('Wave Length')
 ax[0][1].set_ylabel('Loadings')
 ax[0][1].set_title('Loadings')
