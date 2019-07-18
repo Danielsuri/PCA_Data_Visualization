@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import glob
 
-all_files = glob.glob('PCA/*.txt')
+all_files = glob.glob('All_samples/*.txt')
 all_files.sort()
 
 df = pd.DataFrame()
@@ -18,7 +18,7 @@ df.columns = data['Wave_Length']
 df = df.T
 samples_to_plot = []
 # Choose sample to plot:
-str_to_find = 'Sample'
+str_to_find = 'COM'
 
 sample_names = df.columns.values
 for sample in sample_names:
