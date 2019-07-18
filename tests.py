@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob
 
-all_files = glob.glob('plot/*.txt')
+all_files = glob.glob('PCA/*.txt')
 all_files.sort()
 
 df = pd.DataFrame()
