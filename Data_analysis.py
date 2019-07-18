@@ -11,11 +11,6 @@ df = pd.DataFrame()
 for file_name in all_files:
     col_name = file_name.split("\\")[1].split('.')[0]
     data = pd.read_csv(file_name, sep='\t', skiprows=13, names=['Wave_Length', col_name])
-    # try:
-    #     df.insert(loc=0, column='Wave_Length', value=data['Wave_Length'].values, allow_duplicates=False)
-    #     pass
-    # except ValueError:
-    #     pass
     df.insert(loc=0, column=col_name, value=data[col_name].values)
 
 df = df.T
