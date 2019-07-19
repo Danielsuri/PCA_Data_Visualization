@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import glob
 from scipy.signal import savgol_filter
+from scipy import signal
 
 all_files = glob.glob('All_samples/*.txt')
 all_files.sort()
