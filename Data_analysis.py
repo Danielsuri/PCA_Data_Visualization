@@ -33,21 +33,28 @@ for sample in sample_names:
 mean_air_sam = df[air_sam].mean(1)
 # Remove all air samples to stay only with measurements data
 df_minus_dark.drop(columns=air_sam, inplace=True)
-# Divide by air mean
+# Divide by air mean => Absorbance dataframe
 absorbance_df = df_minus_dark.div(mean_air_sam, axis=0)
 
 samples_to_plot = []
 # Choose sample to plot:
-str_to_find = 'COM'
+str_to_find = 'COM1'
 
 sample_names = df.columns.values
 for sample in sample_names:
     if str_to_find in sample:
         samples_to_plot.append(sample)
 
-x = df.index.values
-y = df[samples_to_plot[0]].values
-df[samples_to_plot].plot(title=str_to_find + ' sample plot')
 
-df[samples_to_plot].diff().plot(title=str_to_find + ' First derivative')
+# sav_gol dataframe
+sg_df = pd.DataFrame(data=savgol_filter(absorbance_df.values, 5, 3), columns=absorbance_df.columns,
+                     index=absorbance_df.index)
+
+# Sav_Gol plots
+sg_df[samples_to_plot].plot(title=str_to_find + ' Sav_Gol Absorbance plot')
+sg_df[samples_to_plot].diff().plot(title=str_to_find + ' Sav_Gol First derivative')
+
+absorbance_df[samples_to_plot].plot(title=str_to_find + ' Absorbance plot')
+absorbance_df[samples_to_plot].diff().plot(title=str_to_find + ' First derivative')
+
 plt.show()
