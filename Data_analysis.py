@@ -37,10 +37,10 @@ df_minus_dark.drop(columns=air_sam, inplace=True)
 absorbance_df = df_minus_dark.div(mean_air_sam, axis=0)
 
 samples_to_plot = []
-# Choose sample to plot:
-str_to_find = 'COM1'
+# Choose sample to plot: 'NQ' for all samples
+str_to_find = 'Yog'
 
-sample_names = df.columns.values
+sample_names = absorbance_df.columns.values
 for sample in sample_names:
     if str_to_find in sample:
         samples_to_plot.append(sample)
