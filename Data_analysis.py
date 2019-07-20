@@ -57,7 +57,8 @@ if len(samples_to_plot) == 1:
     peaks_idxs = signal.find_peaks(sg_df[samples_to_plot[0]].values, distance=80)
     peak_wavelen = sg_df[samples_to_plot[0]].index.values[[peaks_idxs[0]]]
     peaks_vals = sg_df[samples_to_plot[0]].values[peaks_idxs[0]]
-    peaks_diff = np.diff(peaks_vals)
+    peaks_diff = np.abs(np.diff(peaks_vals))
+    print(peaks_diff)
     # create plot with scatter on peaks
     ax = sg_df[samples_to_plot].plot()
     ax.scatter(peak_wavelen, peaks_vals, marker='o', c='red')
