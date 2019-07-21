@@ -46,7 +46,6 @@ for sample in sample_names:
     if str_to_find in sample:
         samples_to_plot.append(sample)
 
-
 # sav_gol dataframe
 sg_df = pd.DataFrame(data=savgol_filter(absorbance_df.values, 5, 3), columns=absorbance_df.columns,
                      index=absorbance_df.index)
@@ -60,14 +59,20 @@ if len(samples_to_plot) == 1:
     peaks_diff = np.abs(np.diff(peaks_vals))
     print(peaks_diff)
     # create plot with scatter on peaks
-    ax = sg_df[samples_to_plot].plot()
+    ax = sg_df[samples_to_plot].plot(title=sg_df[samples_to_plot].columns.values[0])
     ax.scatter(peak_wavelen, peaks_vals, marker='o', c='red')
+    for idx, items in enumerate(peaks_diff):
+        ax.vlines(x=(peak_wavelen[idx] + peak_wavelen[idx + 1]) / 2, ymin=min(peaks_vals[idx], peaks_vals[idx + 1]),
+                   ymax=max(peaks_vals[idx], peaks_vals[idx + 1]), linestyles='dashed', label=peaks_diff[idx])
+        ax.text(x=(peak_wavelen[idx] + peak_wavelen[idx + 1]) / 2, y=min(peaks_vals[idx], peaks_vals[idx + 1]),
+                s='%.2f' % peaks_diff[idx])
+    ax.set_ylabel('Absorbance')
 
-    sg_df[samples_to_plot].plot(title=str_to_find + ' Sav_Gol Absorbance plot')
-    sg_df[samples_to_plot].diff().plot(title=str_to_find + ' Sav_Gol First derivative')
+    # sg_df[samples_to_plot].plot(title=str_to_find + ' Sav_Gol Absorbance plot')
+    sg_df[samples_to_plot].diff().plot(title=sg_df[samples_to_plot].columns.values[0] + ' Sav_Gol First derivative')
 
-    absorbance_df[samples_to_plot].plot(title=str_to_find + ' Absorbance plot')
-    absorbance_df[samples_to_plot].diff().plot(title=str_to_find + ' First derivative')
+    # absorbance_df[samples_to_plot].plot(title=str_to_find + ' Absorbance plot')
+    # absorbance_df[samples_to_plot].diff().plot(title=str_to_find + ' First derivative')
 else:
     # Sav_Gol plots
     sg_df[samples_to_plot].plot(title=str_to_find + ' Sav_Gol Absorbance plot')
