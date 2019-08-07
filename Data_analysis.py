@@ -39,7 +39,7 @@ absorbance_df = df_minus_dark.div(mean_air_sam, axis=0)
 
 samples_to_plot = []
 # Choose sample to plot: 'NQ' for all samples
-str_to_find = '36-993'
+str_to_find = 'Oil'
 
 sample_names = absorbance_df.columns.values
 for sample in sample_names:
